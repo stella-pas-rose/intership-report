@@ -1,0 +1,205 @@
+\documentclass[11pt,a4paper]{report}
+
+% --- Encodage et Langue ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{xcolor} % Pour la gestion de la couleur de confidentialité
+
+% --- Police de caractères (Proche de Times New Roman) --- 
+\usepackage{newtxtext,newtxmath} 
+
+% --- Configuration des Marges (2.5 cm partout) ---
+\usepackage{geometry}
+\geometry{
+    paper=a4paper,
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm,
+    headheight=15pt, 
+    footskip=30pt
+}
+
+% --- Interligne (1,5) ---
+\usepackage{setspace}
+\onehalfspacing 
+
+% --- Gestion des tailles de titres ---
+\usepackage{titlesec}
+% Titre de chapitre en Times 14
+\titleformat{\chapter}[block]
+  {\normalfont\fontsize{14}{16}\bfseries}{\thechapter.}{0.5em}{}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+% Titre de section en 12pt
+\titleformat{\section}
+  {\normalfont\fontsize{12}{14}\bfseries}{\thesection}{1em}{}
+
+% --- En-tête et Pied de page (fancyhdr) ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} 
+
+% En-tête (Times 10pt)
+\fancyhead[L]{\fontsize{10}{12}\selectfont Licence 3 Informatique parcours Info / Miage / Math Info – Université de Lille – Faculté des Sciences et Technologies}
+
+% Pied de page
+\fancyfoot[R]{\thepage} % Numéro de page en bas à droite
+\fancyfoot[L]{\fontsize{10}{12}\selectfont Stella-Rose Rose} % nom en bas à gauche
+
+% Application du style sur les pages de début de chapitre (style 'plain')
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyhead[L]{\fontsize{10}{12}\selectfont Licence 3 Informatique parcours Info – Université de Lille – Faculté des Sciences et Technologies}
+    \fancyfoot[R]{\thepage}
+    \fancyfoot[L]{\fontsize{10}{12}\selectfont Stella-Rose MILLE}
+    \renewcommand{\headrulewidth}{0.4pt}
+}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Figures et Légendes ---
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf}
+
+\usepackage[colorlinks=true, linkcolor=black, citecolor=blue, urlcolor=blue]{hyperref}
+
+\begin{document}
+
+% ======================================================================
+% page de garde
+% ======================================================================
+\begin{titlepage}
+    \centering
+    
+    % --- Bloc Haut Gauche : Université de Lille ---
+    \begin{minipage}{0.45\textwidth}
+        \begin{flushleft}
+            \includegraphics[height=1.8cm]{ULille.sans.baseline-Horizontal-CMJN-Noir.png}\\
+            \vspace{0.2cm}
+            \fontsize{9}{11}\selectfont
+            \textbf{Université de Lille}\\
+            Faculté des Sciences et Technologies\\
+            Cité Scientifique, Avenue Henri Poincaré\\
+            59655 Villeneuve-d'Ascq, France
+        \end{flushleft}
+    \end{minipage}
+    \hfill
+    % --- Bloc Haut Droite : Entreprise / Laboratoire ---
+    \begin{minipage}{0.45\textwidth}
+        \begin{flushright}
+            \includegraphics[height=1.8cm]{inr_logo_rouge_rvb.pdf}\\
+            \vspace{0.2cm}
+            \fontsize{9}{11}\selectfont
+            \textbf{INRIA}\\
+            Parc Scientifique de la Haute Borne
+            Park Plaza - Bâtiment A - 40 avenue Halley\\
+            59650 Villeneuve d'Ascq - France\\
+            Équipe EVREF\\
+        \end{flushright}
+    \end{minipage}
+    
+    \vfill
+    \vspace{0.5cm}
+    
+    % --- Intitulé Précis de la Formation ---
+    {\fontsize{14}{16}\selectfont\bfseries Licence 3 Informatique parcours Info}\\[0.4cm]
+    {\fontsize{11}{13}\selectfont Année Universitaire 2025 -- 2026}\\[1.5cm]
+    
+    % --- Ligne de séparation ---
+    \rule{\textwidth}{1pt}\\[0.4cm]
+    % --- Titre du Rapport ---
+    {\fontsize{13}{15}\selectfont\scshape RAPPORT DE STAGE}\\[0.5cm]
+    {\fontsize{18}{22}\selectfont\bfseries Génération de tests de performance}\\[0.6cm]
+    \rule{\textwidth}{1pt}\\[0.8cm]
+    
+    % --- Période et Dates du Stage ---
+    {\fontsize{12}{14}\selectfont\bfseries Période du stage :}\\
+    {\fontsize{11}{13}\selectfont du 13 avril au 28 août 2026}\\[2cm]
+    
+    % --- Bloc Acteurs (Auteur et Tuteurs) ---
+    \begin{minipage}{0.48\textwidth}
+        \begin{flushleft} \large
+            \emph{Rédigé et présenté par :}\\
+            \textbf{Stella-Rose MILLE}\\[0.2cm]
+        \end{flushleft}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \begin{flushright} \large
+            \emph{Tuteur en Entreprise :}\\
+            \textbf{Federico LOCHBAUM}\\[0.6cm]
+            
+            \emph{Tuteur Universitaire :}\\
+            \textbf{Romain ROUVOY}
+        \end{flushright}
+    \end{minipage}
+    
+    \vfill
+
+\end{titlepage}
+
+% ======================================================================
+% CONTEXTE DU STAGE (Page 2)
+% ======================================================================
+\chapter{Contexte du Stage}
+\label{ch:contexte}
+
+\section{Présentation du Laboratoire}
+Laboratoire de l'INRIA au sein de l'équipe EVREF
+
+\section{Contexte de l'Application ou du Logiciel}
+Parler de Pharo, langage orienté objet, open source puis de Ume, présentation de ce qu'ai le PBT, quel en est l'objectif...
+
+
+
+% ======================================================================
+% DESCRIPTION D'UNE REALISATIONS (Pages 3 et 4)
+% ======================================================================
+\chapter{Description d'une Réalisation Technique Majeure}
+\label{ch:realisation}
+
+\section{Contexte et Objectif de cette Réalisation}
+Le shrinking: Pourquoi est ce qu'on en as besoin? 
+
+\section{Choix Techniques, Solutions Retenues et Justifications}
+Les différents types de shrinking, compléxité, grammaire....
+peut être mettre des schéma ou des trucs pour aider à la compréhension
+
+\section{Développements et Travaux Réalisés}
+architecture et détails algorithmique
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{example-image} % Remplacer par votre schéma d'architecture
+    \caption{Architecture technique ou modélisation de la réalisation développée (Source : Réalisation propre)}
+    \label{fig:architecture_realisation}
+\end{figure}
+
+\section{Difficultés rencontrées et Solutions apportées}
+La galere que c'est A COMPRENDRE + le peu de documentation propre en dehors des papiers
+solution: on as fait ca pas à pas avec Fede
+
+% ======================================================================
+% CONCLUSION ET BILAN (Page 5)
+% ======================================================================
+\chapter{Conclusion et Bilan du Stage}
+\label{ch:conclusion}
+
+\section{Adéquation de la Réalisation aux Objectifs du Stage}
+amélioration de l'API d'Ume, le shrinking.
+
+\section{Perspectives du Travail Réalisé et Résultats Obtenus}
+résultats: une défintion plus concise du shéma, - de tests gardés en mémoire. 
+
+\section{Présentation du Travail à Réaliser pour la Suite}
+pour la suite: finir le shrinking (amélioration algorithmique, trouvé ce qui est le plus rapide?)
+
+\section{Enseignements et Apports du Stage}
+lire et analyser des papiers, apprendre à s'organiser, connaître son rythme
+Etre indépendante, faire des recherches 
+
+\section{Remerciements}
+
+\end{document}
