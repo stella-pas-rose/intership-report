@@ -4,7 +4,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
-\usepackage{xcolor} % Pour la gestion de la couleur de confidentialité
 
 % --- Police de caractères (Proche de Times New Roman) --- 
 \usepackage{newtxtext,newtxmath} 
@@ -86,7 +85,7 @@
         \end{flushleft}
     \end{minipage}
     \hfill
-    % --- Bloc Haut Droite : Entreprise / Laboratoire ---
+    % --- Bloc Haut Droite : Laboratoire ---
     \begin{minipage}{0.45\textwidth}
         \begin{flushright}
             \includegraphics[height=1.8cm]{inr_logo_rouge_rvb.pdf}\\
@@ -141,17 +140,31 @@
 \end{titlepage}
 
 % ======================================================================
+% CONTEXTE DU STAGE (Page 1.5)
+% ======================================================================
+\tableofcontents
+
+% ======================================================================
 % CONTEXTE DU STAGE (Page 2)
 % ======================================================================
 \chapter{Contexte du Stage}
 \label{ch:contexte}
 
 \section{Présentation du Laboratoire}
-Laboratoire de l'INRIA au sein de l'équipe EVREF
+L'équipe Evref a comme objectif l'étude de l'évolution de grand systèmes informatique. Cette étude est basé sur trois grands axes:
+
+- L'analyse et la migration: Transformer les anciens systèmes semi-automatiquement, génération de tests...
+
+- Les nouveaux outils: développement de debugger, profilers afin d'analyser les logiciels tout en checkant la robustesse et la consommation
+
+- Infrastructure: moteurs d'exécutions adaptatif, + sécurisés et + écologique
 
 \section{Contexte de l'Application ou du Logiciel}
-Parler de Pharo, langage orienté objet, open source puis de Ume, présentation de ce qu'ai le PBT, quel en est l'objectif...
+Contexte: Projet de Thèse
 
+framework de property based testing pour pharo
+
+Demander à Fede sur le "à qui c'est destiné"
 
 
 % ======================================================================
@@ -159,27 +172,33 @@ Parler de Pharo, langage orienté objet, open source puis de Ume, présentation 
 % ======================================================================
 \chapter{Description d'une Réalisation Technique Majeure}
 \label{ch:realisation}
+Au cours de ces septs semaines de stage, j'ai eu l'occasion de réaliser plusieurs améliorations centrés autour de l'API d'Ume,
+ et de simplifier son utilisation pour un public extérieur. 
+J'ai donc commencé par simplifier la définition d'une campagne de test, et aussi implémenté une barre de progression afin que l'utilisateur sache ce qu'il se passe durant l'éxiécution. 
+
+Cependant, une fonctionnalité commune à la plupart des framework de property based testing est la capacité à "shrinker" une erreur. 
 
 \section{Contexte et Objectif de cette Réalisation}
-Le shrinking: Pourquoi est ce qu'on en as besoin? 
+Le shrinking est une notion de réduction d'input afin de trouver l'erreur minimale. 
+Même si nous ne sommes pas encore certains que cette notion puisse nous aider à trouver des problèmes de performance, 
+elle est cependant nécessaire à un utilisateur souhaitant connaître l'origine précisse de ses erreurs.
 
 \section{Choix Techniques, Solutions Retenues et Justifications}
-Les différents types de shrinking, compléxité, grammaire....
-peut être mettre des schéma ou des trucs pour aider à la compréhension
+L'implémentation du shrinking dans Ume est actuellement basé sur celle présenté au sein du fuzzing book. 
+J'ai commencé par créer un simple delta debugger; c'est un algorythme assez simple se basant sur le diviser pour reigner, 
+ainsi on divise la chaîne de caractère passé en input et on compute chaque morceaux pour localiser l'erreur.
+Cependant le delta debugging est très limité et soulève une problématique lorsqu'il vient à respecter une grammaire. 
+C'est pour cela qu'on a implémenté des réducteurs de grammaire. 
 
 \section{Développements et Travaux Réalisés}
-architecture et détails algorithmique
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.6\textwidth]{example-image} % Remplacer par votre schéma d'architecture
-    \caption{Architecture technique ou modélisation de la réalisation développée (Source : Réalisation propre)}
-    \label{fig:architecture_realisation}
-\end{figure}
 
 \section{Difficultés rencontrées et Solutions apportées}
-La galere que c'est A COMPRENDRE + le peu de documentation propre en dehors des papiers
-solution: on as fait ca pas à pas avec Fede
+- la doc, peu d'articles montrant en détail les algo 
+
+- adapter ça a du smalltalk
+
+- faire en sorte que shrinking soit solide et fonctionne bien en explorant toute les branches
 
 % ======================================================================
 % CONCLUSION ET BILAN (Page 5)
@@ -197,8 +216,13 @@ résultats: une défintion plus concise du shéma, - de tests gardés en mémoir
 pour la suite: finir le shrinking (amélioration algorithmique, trouvé ce qui est le plus rapide?)
 
 \section{Enseignements et Apports du Stage}
+L'environnement du stage m'as permise de développer et de renforcer plusieurs notions en peu de temps. 
+Et tout d'abord sur l'indépendance et l'organisation, Federico a, des mes premiers jours souhaité mettre l'accent sur cette notion. 
+
 lire et analyser des papiers, apprendre à s'organiser, connaître son rythme
 Etre indépendante, faire des recherches 
+TDD (un peu), utilisation de pattern design, 
+utilisation de git carré 
 
 \section{Remerciements}
 
