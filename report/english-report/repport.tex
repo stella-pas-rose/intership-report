@@ -1,0 +1,138 @@
+\documentclass[12pt,a4paper]{report} % Passage en police 12 comme demandé
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french,english]{babel} % Ajout de l'anglais
+
+\usepackage{newtxtext,newtxmath} 
+
+\usepackage{geometry}
+\geometry{
+    paper=a4paper,
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm,
+    headheight=15pt,  
+    footskip=30pt
+}
+
+\usepackage{setspace}
+\onehalfspacing % Interligne idéal pour les annotations du correcteur
+
+% --- Gestion des tailles de titres ---
+\usepackage{titlesec}
+\titleformat{\chapter}[block]
+  {\normalfont\fontsize{14}{16}\bfseries}{\thechapter.}{0.5em}{}
+\titlespacing*{\chapter}{0pt}{25pt}{15pt}
+
+\titleformat{\section}
+  {\normalfont\fontsize{12}{14}\bfseries}{\thesection}{1em}{}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} 
+
+\fancyhead[L]{\fontsize{10}{12}\selectfont Computer Science Degree, 3rd year – University of Lille}
+\fancyfoot[R]{\thepage}
+\fancyfoot[L]{\fontsize{10}{12}\selectfont Stella-Rose MILLE} 
+
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyhead[L]{\fontsize{10}{12}\selectfont Computer Science Degree, 3rd year – University of Lille}
+    \fancyfoot[R]{\thepage}
+    \fancyfoot[L]{\fontsize{10}{12}\selectfont Stella-Rose MILLE}
+    \renewcommand{\headrulewidth}{0.4pt}
+}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Figures et Légendes ---
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf}
+
+\usepackage[colorlinks=true, linkcolor=black, citecolor=blue, urlcolor=blue]{hyperref}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+\makeatother
+
+\begin{document}
+\selectlanguage{english}
+
+% ======================================================================
+% EN-TÊTE ET TITRE
+% ======================================================================
+{\centering
+    \vspace*{0.5cm}
+    
+    % --- Titre du Rapport ---
+    {\fontsize{20}{24}\selectfont\bfseries Mid-Term Internship Report}\\[0.4cm]
+    {\fontsize{16}{20}\selectfont\bfseries Upgrading the Ume API at INRIA}\\[0.6cm]
+    
+    \rule{\textwidth}{1pt}\\[0.4cm]
+
+    % --- Intitulé Précis de la Formation ---
+    {\fontsize{14}{16}\selectfont\bfseries Computer Science Degree, 3rd year}\\[0.4cm]
+    {\fontsize{12}{14}\selectfont Academic Year 2025 -- 2026}\\[0.5cm]
+    
+    % --- Ligne de séparation ---
+    \rule{\textwidth}{1pt}\\[0.4cm]
+    
+    % --- Bloc Acteurs ---
+    {\fontsize{14}{16}\selectfont\scshape Stella-Rose MILLE}\\[1.5cm]
+}
+
+% ======================================================================
+% CONTENU DU RAPPORT
+% ======================================================================
+
+\chapter{Company Overview}
+Inria is the national research institute for digital sciences and technology. 
+My internship is within the EVREF research team, which specializes in software 
+evolution, engineering, and design. They place a particular focus on software 
+quality and open-source tools.
+
+\chapter{Preparation and Anticipated Challenges}
+Before starting the internship, the main challenge was the programming language. 
+The project relies entirely on Pharo, an object-oriented language and environment 
+that I did not have the opportunity to learn at university. 
+To avoid being completely lost, I learned the basics of the Pharo language 
+on my own. Additionally, since the project is open-source, I spent some time 
+reading the existing documentation to get an early idea of its architecture. 
+This preparation allowed me to overcome my initial stress regarding the 
+technical stack and ask the right questions from the very beginning.
+
+\chapter{Expectations}
+My main objective during this internship is to upgrade the current Ume API to 
+improve its usability for developers. My primary expectations were to build 
+confidence in my technical skills and learn to adapt quickly to a new 
+technological ecosystem. I also wanted to learn how to write cleaner and 
+more maintainable code following industry standards. Finally, I aimed to 
+develop my autonomy by implementing features from design to completion.
+
+\chapter{Planned Tasks}
+I am working on Ume, a Property-Based Testing (PBT) framework for Pharo. 
+Property-Based Testing is an automatic and random test generator. 
+Its main advantage is that it can generate a large number of tests to find 
+interesting edge cases that could break the code.
+
+I have handled multiple tasks over the past few weeks. 
+First, I simplified the campaign definition of Ume to make the configuration 
+more intuitive for users. Then, I added a progress bar running on a separate 
+thread, which allows users to have real-time feedback on the campaign's 
+progress without freezing the environment. I also implemented a shrinking 
+method. Shrinking is the capacity to reduce a failing input to find the 
+smallest possible case that causes the same bug. It is essential for users 
+to understand the origin of a bug more easily so it can be debugged quickly.
+
+\chapter{Review}
+To sum up this first period, I am extremely satisfied with the trust and 
+autonomy the team has given me. Starting an internship with a completely new 
+programming language was intimidating at first. However, I managed to adapt 
+quickly and no longer feel lost in the codebase. This experience has 
+significantly boosted my self-confidence, proving to me that I am capable of 
+learning fast and contributing effectively to a technical team. It strongly 
+reinforces my desire to pursue my career path in software development.
+
+\end{document}
