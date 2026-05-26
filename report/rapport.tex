@@ -175,6 +175,9 @@ Le shrinking peut être utile lorsqu'un test échoue sur un input complexe
 générée durant une campagne. L'objectif est de réduire cet input à une taille
 minimale reproduisant la même erreur. 
 
+Sur la figure suivante, un exemple de shrinking est présenté: si le problème d'une chaîne réside dans la
+présence du caractère 'e' alor la chaîne 'kqsbdvieqvsbdo' va être réduite à 'e'.
+
 \begin{center}
     \includegraphics[scale=0.65]{exemple.png}
     \captionof{figure}{exemple de shrinking sur une chaîne}
@@ -193,7 +196,8 @@ présentés dans le Fuzzing Book\footnote{\url{https://www.fuzzingbook.org/html/
 Pour débuter, j'ai implémenté un algorithme de Delta Debugging classique qui permet
 de traîter la réduction de chaînes. Cet algorithme est basé sur le principe du
 "diviser pour régner", il segmente les chaîne de caractères et évalue chaque
-morceau afin d'isoler la faille.
+morceau afin d'isoler la faille. (figure~\ref{fig:exemple1})
+
 Malgès son efficacité pour traîter des chaînes, le Delta Debugging montre ses 
 limites au moment de traîter des grammaires complexes. Une simple 
 segmentation casse la syntaxe et les tests échoue pour des erreurs de parsing. 
@@ -202,20 +206,43 @@ C'est pourquoi il est nécessaire de coupler cette méthode à des réducteurs
 basés sur la grammaire, afin de garantir que chaque entrés soit syntaxiquement
 valide.
 
+
+\begin{center}
+    \includegraphics[scale=0.5]{arbreGrammar.png}
+    \captionof{figure}{arbre de grammaire}
+    \label{fig:exemple2}
+\end{center}
+
 \section{Développements et travaux réalisés}
 Les algorithmes restant complexes, j'ai appliqué la méthologie du test-driven development
 (TDD). Cela m'as permis de définir le comportement attendu avant même de commencer
 le code. J'ai implémenter deux algorithme de réduction avec un design pattern
-Strategy: la réduction par sous arbres
-et par expansion alterné. Cette méthodologie permetras d'impllémenter facilement 
-l'ajout de futurs algorithmes. 
+Strategy: la réduction par sous arbres et par expansion alterné. 
+Cette méthodologie permetras d'implémenter facilement l'ajout de futurs algorithmes. 
+
+
+%\begin{center}
+%    \begin{minipage}{0.48\textwidth}
+%        \centering
+%        \includegraphics[scale=0.45]{subtreearbre.png}
+%        \captionof{figure}{Stratégie de réduction par sous-arbres}
+%        \label{fig:subtree}
+%    \end{minipage}
+%    \hfill 
+%    \begin{minipage}{0.48\textwidth}
+%        \centering
+%        \includegraphics[scale=0.5]{alternatearbre.png}
+%        \captionof{figure}{Stratégie par expansion alternée}
+%        \label{fig:alternate}
+%    \end{minipage}
+%\end{center}
 
 \section{Difficultés rencontrées et solutions apportées}
 Durant mon stage, j'ai rencontrés plusieurs difficulté, spécifiquement
-sur l'implémentation du shrinking, telle que: 
+sur l'implémentation du shrinking. 
 \begin{itemize}
     \item Adaptation Smalltalk/Pharo : Les exemples d'algorithmes du Fuzzing Book sont écrits en Python. 
-    Adapthé des algorithmes en Python vers Pharo a demandé uune compréhension complète de la logique 
+    Adapthé des algorithmes en Python vers Pharo a demandé une compréhension complète de la logique 
     mais aussi une réflexion sur les structure de données.
     \item Solidité de l'exploration : Garantir que le shrinker explore 
     de manière efficace les branches de réduction a nécessité a nécessité de nombreux tests. (à compléter)
@@ -228,23 +255,33 @@ sur l'implémentation du shrinking, telle que:
 \label{ch:conclusion}
 
 \section{Adéquation de la Réalisation aux Objectifs et Perspectives}
-Les objectifs de cette première moitié de stage ont été atteints : l'API 
-d'Ume a été simplifiée pour l'utilisateur final et un début de shrinker fonctionnelle
-respectant la grammaire a été intégrée. 
+Ce qui a été réalisé:
+\begin{itemize}
+    \item simplification de la définition d'une campagne
+    \item ajout d'une bar de progression
+    \item ajout d'une ci limité à certains tests
+    \item ajout d'un shrinker: delta debugger et réduction de grammaire 
+\end{itemize}
+
+L'ajout de ses fonctionnalités permets une prise en main plus simple pour 
+un utilisateur: la définition est concise et a un retour visuel prouvant
+que des tests sont générés en direct. Le shrinker peut être utilisé afin de 
+trouver des cas d'erreurs debuggable facilement, et même avec
+l'utilisation d'une grammaire spécifique. 
 
 Concernant la question de l'évaluation, la mise en place de benchmarks 
-constitue l'étape logique suivante. Ils permettront de comparer différents algorithmes de shrinking. 
+constitue l'étape logique suivante. Ils permettront de comparer différents 
+algorithmes de shrinking. 
 
 \section{Présentation du Travail à Réaliser pour la Suite}
 Mon stage s'étendant jusque fin août, j'ai plusieurs missions pour la suite, le shrinker doit
 continuer à être développer, notamment par l'implémentation d'autres algorithmes de réductions
 et par la comparaison entre eux. 
-
 Afin d'avoir une lecture plus simples des résultats d'une campagne, l'ajout d'un feedback visuel
 est prévue. Ce retour permettras d'avoir une vue d'ensemble sur la campagne et d'en receuillir les informations
 facilement. 
-
-L'ajout d'un plugin pour Dr Test (une UI plugin-based permettant de gérer les tests) est aussi prévue.  
+Et dans cette continuité, l'ajout d'un plugin pour Dr Test (une UI plugin-based permettant de gérer 
+les tests) est aussi prévue.  
 
 \section{Enseignements et Apports du Stage}
 Ce stage m'a permis de développer une forte autonomie. Dès les premiers jours, 
