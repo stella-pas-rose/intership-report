@@ -64,6 +64,7 @@
     
     \begin{minipage}{0.45\textwidth}
         \begin{flushleft}
+            \includegraphics[height=1.8cm]{ULille.sans.baseline-Horizontal-CMJN-Noir.png}\\
             \vspace{0.2cm}
             \fontsize{9}{11}\selectfont
             \textbf{Université de Lille}\\
@@ -75,6 +76,7 @@
     \hfill
     \begin{minipage}{0.45\textwidth}
         \begin{flushright}
+            \includegraphics[height=1.8cm]{inr_logo_rouge_rvb.pdf}\\
             \vspace{0.2cm}
             \fontsize{9}{11}\selectfont
             \textbf{INRIA Lille -- Nord Europe}\\
@@ -86,22 +88,16 @@
     \vfill
     \vspace{0.5cm}
     
-    % --- Intitulé Précis de la Formation ---
     {\fontsize{14}{16}\selectfont\bfseries Licence 3 Informatique}\\[0.4cm]
     {\fontsize{11}{13}\selectfont Année Universitaire 2025 -- 2026}\\[1.5cm]
     
-    % --- Ligne de séparation ---
     \rule{\textwidth}{1pt}\\[0.4cm]
-    % --- Titre du Rapport ---
-    {\fontsize{13}{15}\selectfont\scshape RAPPORT DE STAGE INTERMÉDIAIRE}\\[0.5cm]
-    {\fontsize{18}{22}\selectfont\bfseries Évolution et optimisation d'un framework de Property-Based Testing pour Pharo}\\[0.6cm]
+    {\fontsize{18}{22}\selectfont\bfseries ???}\\[0.6cm]
     \rule{\textwidth}{1pt}\\[0.8cm]
     
-    % --- Période et Dates du Stage ---
     {\fontsize{12}{14}\selectfont\bfseries Période du stage :}\\
     {\fontsize{11}{13}\selectfont du 13 avril au 28 août 2026}\\[2cm]
     
-    % --- Bloc Acteurs (Auteur et Tuteurs) ---
     \begin{minipage}{0.48\textwidth}
         \begin{flushleft} \large
             \emph{Rédigé et présenté par :}\\
@@ -134,87 +130,95 @@
 \label{ch:contexte}
 
 \section{Présentation du Laboratoire et de l'Équipe}
-Ce stage se déroule au sein d'INRIA (Institut National de Recherche en Sciences et Technologies du Numérique), un organisme public de recherche dédié aux sciences du numérique. 
-Plus précisément, j'ai intégré l'équipe de recherche Evref. 
-
-Leur principal objectif est l'étude de l'évolution des grands systèmes 
+Ce stage se déroule au sein d'INRIA (Institut National de Recherche en Sciences 
+et Technologies du Numérique),un établissement de recherche dédié aux 
+sciences du numérique. 
+J'y ai intégré l'équipe de recherche Evref, une équpe dont le principal
+objectif est l'étude de l'évolution des grands systèmes 
 informatiques. Leurs travaux s'articulent autour de trois axes :
-L'analyse et la migration, le développement d'outils, 
-l'infrastructure.
+L'analyse et la migration de système existants, le développement d'outils pour supporter l'évolution, 
+l'infrastructure permettant de supporter l'évolution logiciel.
 
-\section{Contexte de l'Application : Le projet Ume}
+\section{Contexte de l'Application}
 
 Mon travail s'inscrit dans le cadre d'un projet de thèse de l'équipe, 
-centré sur le développement d'Ume. Ume est un framework de Property-Based Testing
+centré sur le développement d'Ume: un framework de Property-Based Testing
  (PBT) conçu spécifiquement pour l'écosystème Pharo 
- (un langage purement orienté objet dérivé de Smalltalk). 
+ (un langage purement orienté objet). 
  Contrairement aux tests unitaires classiques où le développeur 
- écrit manuellement les entrées, le PBT génère automatiquement des 
- centaines d'entrées aléatoires pour valider des propriétés globales du logiciel. 
- Ume cherche à pousser ce concept plus loin en l'appliquant à la détection 
- de régressions et d'anomalies de performance.
+ écrit manuellement les inputs, le PBT génère automatiquement des 
+ centaines d'inputs aléatoires pour valider le bon fonctionnement du logiciel. 
+ Ume cherches à spécialiser ce concept dans la recherche de problèmes de performances.
+
+ AJOUTER DES DETAILS
+
+ c'est quoi une campagne??? 
+
+\begin{center}
+    \includegraphics[scale=0.65]{schemaUme.png}
+    \captionof{figure}{Architecture d'Ume}
+    \label{fig:architecture}
+\end{center}
+
+mettre ce schéma à ma sauce en highlightant les sections sur les quelles je travaille
 
 % ======================================================================
 % DESCRIPTION D'UNE REALISATIONS
 % ======================================================================
-\chapter{Description d'une Réalisation Technique Majeure}
+\chapter{Description d'une réalisation technique majeure}
 \label{ch:realisation}
-Au cours de ces sept premières semaines de stage, j'ai réalisé plusieurs 
-améliorations centrées sur l'API d'Ume afin de simplifier son adoption 
-par des utilisateurs extérieurs. J'ai notamment fluidifié la définition 
-d'une campagne de test et implémenté une barre de progression 
-multithreadée pour offrir un retour visuel en temps réel lors de l'exécution. 
-Cependant, ma réalisation majeure réside dans l'intégration du mécanisme de 
-shrinking.
+Dans cette section, je vais présenter le shrinking, pourquoi ce concept a été ajouté à Ume et
+comment ça fonctionne. 
 
-\section{Contexte et Objectif du Shrinking}
-Le shrinking intervient lorsqu'un test échoue sur une entrée complexe 
-générée aléatoirement. L'objectif est de réduire cet input au cas minimal 
-reproduisant l'erreur. Bien que l'application du shrinking aux problématiques 
-pures de performance reste un sujet de recherche ouvert, cette 
-fonctionnalité est indispensable pour permettre à l'utilisateur de 
-localiser l'origine précise d'un bug fonctionnel sans être noyé sous des données 
-superflues.
+\section{Contexte et objectif du shrinking}
+Le shrinking peut être utile lorsqu'un test échoue sur un input complexe 
+générée durant une campagne. L'objectif est de réduire cet input à une taille
+minimale reproduisant la même erreur. 
 
-\section{Choix Techniques et Justifications}
-L'implémentation du shrinking dans Ume s'inspire des travaux de référence du
-Fuzzing Book. 
-Mon premier choix s'est porté sur la création d'un algorithme de 
-Delta Debugging. Basé sur le principe du « diviser pour régner », 
-cet algorithme segmente la chaîne de caractères d'entrée et évalue chaque morceau 
-pour isoler la faille. 
+\begin{center}
+    \includegraphics[scale=0.65]{exemple.png}
+    \captionof{figure}{exemple de shrinking sur une chaîne}
+    \label{fig:exemple1}
+\end{center}
 
-Cependant, le Delta Debugging classique montre ses limites lorsqu'il doit 
-manipuler des entrées structurées. Si la réduction casse la syntaxe attendue 
-par le programme, le test échoue pour une mauvaise raison (erreur de parsing). 
-Pour résoudre cette problématique, nous avons choisi de coupler cette approche 
-à des \textbf{réducteurs basés sur la grammaire}, garantissant que chaque entrée 
-réduite reste syntaxiquement valide.
+Bien que l'utilité de l'application du shrinking 
+à des problèmes de performances est une question que l'on se pose, cette 
+fonctionnalité reste indispensable d'un point de vue utilisateur pour permettre la
+localisation précisse du problème et simplifier la phase de debuggage. 
 
-\section{Développements et Travaux Réalisés}
-Pour mener à bien cette réalisation, j'ai adopté une méthodologie rigoureuse 
-de développement piloté par les tests (TDD). Cela m'a permis de 
-définir précisément le comportement attendu de mes réducteurs avant d'écrire 
-le code métier. J'ai mis en place le design pattern Strategy pour 
-l'architecture du shrinker. Ce choix permet d'isoler les différents 
-algorithmes de réduction (Delta Debugging, réduction de grammaire) au sein 
-de classes distinctes, rendant le framework facilement extensible pour de 
-futurs algorithmes.
+\section{Choix techniques et justifications}
+Afin d'implémenter le shrinking dans Ume, je me suis basé sur les algorithmes 
+présentés dans le Fuzzing Book\footnote{\url{https://www.fuzzingbook.org/html/Reducer.html\#Delta-Debugging}}.
 
-\section{Difficultés rencontrées et Solutions apportées}
+Pour débuter, j'ai implémenté un algorithme de Delta Debugging classique qui permet
+de traîter la réduction de chaînes. Cet algorithme est basé sur le principe du
+"diviser pour régner", il segmente les chaîne de caractères et évalue chaque
+morceau afin d'isoler la faille.
+Malgès son efficacité pour traîter des chaînes, le Delta Debugging montre ses 
+limites au moment de traîter des grammaires complexes. Une simple 
+segmentation casse la syntaxe et les tests échoue pour des erreurs de parsing. 
+
+C'est pourquoi il est nécessaire de coupler cette méthode à des réducteurs 
+basés sur la grammaire, afin de garantir que chaque entrés soit syntaxiquement
+valide.
+
+\section{Développements et travaux réalisés}
+Les algorithmes restant complexes, j'ai appliqué la méthologie du test-driven development
+(TDD). Cela m'as permis de définir le comportement attendu avant même de commencer
+le code. J'ai implémenter deux algorithme de réduction avec un design pattern
+Strategy: la réduction par sous arbres
+et par expansion alterné. Cette méthodologie permetras d'impllémenter facilement 
+l'ajout de futurs algorithmes. 
+
+\section{Difficultés rencontrées et solutions apportées}
+Durant mon stage, j'ai rencontrés plusieurs difficulté, spécifiquement
+sur l'implémentation du shrinking, telle que: 
 \begin{itemize}
-    \item \textbf{Manque de documentation et de détails théoriques :} Les 
-    articles académiques détaillent rarement l'implémentation bas niveau des 
-    algorithmes. J'ai dû analyser des codebases open-source existants pour en 
-    comprendre la logique fine.
-    \item \textbf{Adaptation au paradigme Smalltalk/Pharo :} Les exemples de 
-    référence (notamment du \textit{Fuzzing Book}) sont écrits en Python. 
-    Transposer une logique impérative ou procédurale vers le modèle purement 
-    orienté objet de Pharo a demandé une réingénierie complète des structures 
-    de données.
-    \item \textbf{Solidité de l'exploration :} Garantir que le shrinker explore 
-    efficacement les branches de réduction sans boucler indéfiniment a nécessité 
-    la mise en place d'une suite de tests aux limites très stricte.
+    \item Adaptation Smalltalk/Pharo : Les exemples d'algorithmes du Fuzzing Book sont écrits en Python. 
+    Adapthé des algorithmes en Python vers Pharo a demandé uune compréhension complète de la logique 
+    mais aussi une réflexion sur les structure de données.
+    \item Solidité de l'exploration : Garantir que le shrinker explore 
+    de manière efficace les branches de réduction a nécessité a nécessité de nombreux tests. (à compléter)
 \end{itemize}
 
 % ======================================================================
@@ -225,35 +229,32 @@ futurs algorithmes.
 
 \section{Adéquation de la Réalisation aux Objectifs et Perspectives}
 Les objectifs de cette première moitié de stage ont été atteints : l'API 
-d'Ume a été simplifiée pour l'utilisateur final et une première brique 
-fonctionnelle de shrinking respectant la grammaire a été intégrée. Concernant 
-la question de l'évaluation, la mise en place de \textbf{benchmarks} précis 
-constitue l'étape logique suivante. Ils permettront de mesurer l'impact du 
-shrinking sur le temps de calcul et le nombre de tests générés.
+d'Ume a été simplifiée pour l'utilisateur final et un début de shrinker fonctionnelle
+respectant la grammaire a été intégrée. 
+
+Concernant la question de l'évaluation, la mise en place de benchmarks 
+constitue l'étape logique suivante. Ils permettront de comparer différents algorithmes de shrinking. 
 
 \section{Présentation du Travail à Réaliser pour la Suite}
-La suite de mes missions s'articulera autour de deux axes :
-\begin{itemize}
-    \item L'implémentation complète et l'optimisation des algorithmes de 
-    réduction de grammaire existants.
-    \item La réalisation de campagnes de Benchmarks pour quantifier les 
-    performances du shrinker.
-    \item L'objectif à terme est de concevoir un système capable d'aiguiller 
-    intelligemment la campagne de shrinking vers l'algorithme le plus adapté 
-    au cas par cas, afin de limiter le coût computationnel actuel de cette 
-    procédure.
-\end{itemize}
+Mon stage s'étendant jusque fin août, j'ai plusieurs missions pour la suite, le shrinker doit
+continuer à être développer, notamment par l'implémentation d'autres algorithmes de réductions
+et par la comparaison entre eux. 
+
+Afin d'avoir une lecture plus simples des résultats d'une campagne, l'ajout d'un feedback visuel
+est prévue. Ce retour permettras d'avoir une vue d'ensemble sur la campagne et d'en receuillir les informations
+facilement. 
+
+L'ajout d'un plugin pour Dr Test (une UI plugin-based permettant de gérer les tests) est aussi prévue.  
 
 \section{Enseignements et Apports du Stage}
 Ce stage m'a permis de développer une forte autonomie. Dès les premiers jours, 
-mon tuteur a mis l'accent sur l'auto-organisation. J'ai appris à chercher 
-l'information par moi-même en lisant des articles de recherche. 
+mon tuteur a mis l'accent sur l'organisation et l'autonomie.
 Nous avons structuré notre flux de travail avec GitHub pour la gestion de 
-versions (apprentissage des Pull Requests professionnelles et bien documentées) 
-et \textbf{Obsidian} pour la documentation de mes tâches quotidiennes. 
+versions (apprentissage des Pull Requests bien documentées) 
+et Obsidian pour la documentation de mes tâches quotidiennes. 
 
-Sur le plan technique, l'utilisation rigoureuse du TDD m'a permis de canaliser 
-mes développements lorsque je perdais de vue l'objectif final, tandis que 
+Sur le plan technique, l'utilisation rigoureuse du TDD m'a permis de me canaliser 
+lorsque je perdais de vue l'objectif final, tandis que 
 l'application concrète des Design Patterns a renforcé mes compétences en 
 conception logicielle.
 
