@@ -24,7 +24,7 @@
 \usepackage{titlesec}
 \titleformat{\chapter}[block]
   {\normalfont\fontsize{14}{16}\bfseries}{\thechapter.}{0.5em}{}
-\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+\titlespacing*{\chapter}{0pt}{-20pt}{12pt}
 
 \titleformat{\section}
   {\normalfont\fontsize{12}{14}\bfseries}{\thesection}{1em}{}
@@ -79,9 +79,10 @@
             \includegraphics[height=1.8cm]{inr_logo_rouge_rvb.pdf}\\
             \vspace{0.2cm}
             \fontsize{9}{11}\selectfont
-            \textbf{INRIA Lille -- Nord Europe}\\
-            Parc Scientifique de la Haute Borne\\
+            \textbf{Centre INRIA }\\
             Équipe EVREF\\
+            40 Avenue Halley\\
+            59650 Villeneuve-d'Ascq, France\\
         \end{flushright}
     \end{minipage}
     
@@ -92,7 +93,7 @@
     {\fontsize{11}{13}\selectfont Année Universitaire 2025 -- 2026}\\[1.5cm]
     
     \rule{\textwidth}{1pt}\\[0.4cm]
-    {\fontsize{18}{22}\selectfont\bfseries ???}\\[0.6cm]
+    {\fontsize{18}{22}\selectfont\bfseries Implémentation d'algorithmes de réduction}\\[0.6cm]
     \rule{\textwidth}{1pt}\\[0.8cm]
     
     {\fontsize{12}{14}\selectfont\bfseries Période du stage :}\\
@@ -100,18 +101,22 @@
     
     \begin{minipage}{0.48\textwidth}
         \begin{flushleft} \large
-            \emph{Rédigé et présenté par :}\\
-            \textbf{Stella-Rose MILLE}\\[0.2cm]
+            \emph{Rédigé par :}\\
+            \textbf{Stella-Rose MILLE}\\[0.6cm]
+        
+            \emph{Tuteur Universitaire :}\\
+            \textbf{Romain ROUVOY}
         \end{flushleft}
     \end{minipage}
     \hfill
     \begin{minipage}{0.48\textwidth}
         \begin{flushright} \large
             \emph{Tuteur en Entreprise :}\\
+            \textbf{Guillermo POLITO}\\[0.6cm]
+
+            \emph{Superviseur :}\\
             \textbf{Federico LOCHBAUM}\\[0.6cm]
             
-            \emph{Tuteur Universitaire :}\\
-            \textbf{Romain ROUVOY}
         \end{flushright}
     \end{minipage}
     
@@ -133,64 +138,60 @@
 Ce stage se déroule au sein d'INRIA (Institut National de Recherche en Sciences 
 et Technologies du Numérique),un établissement de recherche dédié aux 
 sciences du numérique. 
-J'y ai intégré l'équipe de recherche Evref, une équpe dont le principal
+J'y ai intégré l'équipe de recherche Evref, une équipe dont le principal
 objectif est l'étude de l'évolution des grands systèmes 
 informatiques. Leurs travaux s'articulent autour de trois axes :
-L'analyse et la migration de système existants, le développement d'outils pour supporter l'évolution, 
-l'infrastructure permettant de supporter l'évolution logiciel.
+L'analyse et la migration de système existants, le développement d'outils pour supporter l'évolution et 
+l'infrastructure permettant de supporter l'évolution logicielle.
 
 \section{Contexte de l'Application}
 
 Mon travail s'inscrit dans le cadre d'un projet de thèse de l'équipe, 
 centré sur le développement d'Ume: un framework de Property-Based Testing
- (PBT) conçu spécifiquement pour l'écosystème Pharo 
- (un langage purement orienté objet). 
- Contrairement aux tests unitaires classiques où le développeur 
- écrit manuellement les inputs, le PBT génère automatiquement des 
- centaines d'inputs aléatoires pour valider le bon fonctionnement du logiciel. 
- Ume cherches à spécialiser ce concept dans la recherche de problèmes de performances.
+(PBT) conçu spécifiquement pour l'écosystème Pharo 
+(un langage purement orienté objet dévelopé par l'équipe). 
+Contrairement aux tests unitaires classiques où le développeur 
+écrit manuellement les inputs, le PBT génère automatiquement des 
+centaines d'inputs pour valider le bon fonctionnement du logiciel. 
+Ume cherches à spécialiser ce concept dans la recherche de problèmes de performances.
 
- AJOUTER DES DETAILS
+Au sein d'Ume, on organise cette génération de tests autour d'une campagne 
+de tests: une génération automatique d'un large nombres de tests définit par et un schéma. 
 
- c'est quoi une campagne??? 
+Le Schema est un objet définissant précisément la forme des données à 
+générer et la condition de validation. Elle se repose sur quatres composants:
+le générateurs (qui décrit la manière dont l'objet doit être initialisé),
+la contrainte des arguments (un tableau contenant des générateurs de contraintes, chacun correspondant à un argument attendu),
+la méthode (que l'on veut testé), la propriété (vérifiant si le cas généré est fonctionnel).
+Une campagne a un cas d'arrêt définit par l'utilisateur, cela peut être une contrainte de temps, de 
+nombre de tests générés, d'erreurs rencontrés ou la couverture de code.
 
 \begin{center}
     \includegraphics[scale=0.65]{schemaUme.png}
-    \captionof{figure}{Architecture d'Ume}
+    \captionof{figure}{Architecture d'Ume\protect\footnotemark}
     \label{fig:architecture}
 \end{center}
-
-mettre ce schéma à ma sauce en highlightant les sections sur les quelles je travaille
+\footnotetext{\url{https://github.com/FedeLoch/Ume}}
 
 % ======================================================================
 % DESCRIPTION D'UNE REALISATIONS
 % ======================================================================
 \chapter{Description d'une réalisation technique majeure}
 \label{ch:realisation}
-Dans cette section, je vais présenter le shrinking, pourquoi ce concept a été ajouté à Ume et
-comment ça fonctionne. 
+Pour cette section, j'ai décidé de présenter un axe de mon stage consistant en l'implémentation
+du shrinking au sein d'Ume. 
 
 \section{Contexte et objectif du shrinking}
-Le shrinking peut être utile lorsqu'un test échoue sur un input complexe 
-générée durant une campagne. L'objectif est de réduire cet input à une taille
-minimale reproduisant la même erreur. 
-
-Sur la figure suivante, un exemple de shrinking est présenté: si le problème d'une chaîne réside dans la
-présence du caractère 'e' alor la chaîne 'kqsbdvieqvsbdo' va être réduite à 'e'.
-
-\begin{center}
-    \includegraphics[scale=0.65]{exemple.png}
-    \captionof{figure}{exemple de shrinking sur une chaîne}
-    \label{fig:exemple1}
-\end{center}
-
+Le shrinking consiste en la réduction d'entrée de tests: lorsqu'un test échoue 
+sur un input complexe générée durant une campagne de fuzzing\footnote{dire ce qu'est le fuzzing}. 
+L'objectif est de réduire cet input à une taille minimale reproduisant la même erreur. 
 Bien que l'utilité de l'application du shrinking 
 à des problèmes de performances est une question que l'on se pose, cette 
 fonctionnalité reste indispensable d'un point de vue utilisateur pour permettre la
-localisation précisse du problème et simplifier la phase de debuggage. 
+localisation précise du problème et simplifier la phase de debuggage. 
 
 \section{Choix techniques et justifications}
-Afin d'implémenter le shrinking dans Ume, je me suis basé sur les algorithmes 
+Afin d'intégrer un méchanisme de shrinking dans Ume, je me suis basé sur les algorithmes 
 présentés dans le Fuzzing Book\footnote{\url{https://www.fuzzingbook.org/html/Reducer.html\#Delta-Debugging}}.
 
 Pour débuter, j'ai implémenté un algorithme de Delta Debugging classique qui permet
@@ -198,14 +199,27 @@ de traîter la réduction de chaînes. Cet algorithme est basé sur le principe 
 "diviser pour régner", il segmente les chaîne de caractères et évalue chaque
 morceau afin d'isoler la faille. (figure~\ref{fig:exemple1})
 
-Malgès son efficacité pour traîter des chaînes, le Delta Debugging montre ses 
+Dans l'exemple suivant, le problème d'une chaîne réside dans la présence du caractère 'e'. Ainsi la 
+chaîne 'kqsbdvieqvsbdo' va être d'abord fragmentée en deux: 
+on évalue le côté droit, si il ne retourne pas d'erreur on évalue le côté gauche. Si un morceau de la chaîne 
+reproduit l'erreur, on peut le fragmenter à nouveau. La réduction s'arrête dans la chaîne atteint la taille
+minimale de un caractères ou lorsque on ne peut plus segmenté en provoquant une erreur.
+Ainsi notre chaîne 'kqsbdvieqvsbdo' est réduite à quatre reprises et on obtient 'e'. 
+
+\begin{center}
+    \includegraphics[scale=0.65]{exemple.png}
+    \captionof{figure}{exemple de shrinking sur une chaîne}
+    \label{fig:exemple1}
+\end{center}
+
+
+Malgré son efficacité pour traîter des chaînes, le Delta Debugging montre ses 
 limites au moment de traîter des grammaires complexes. Une simple 
 segmentation casse la syntaxe et les tests échoue pour des erreurs de parsing. 
 
 C'est pourquoi il est nécessaire de coupler cette méthode à des réducteurs 
-basés sur la grammaire, afin de garantir que chaque entrés soit syntaxiquement
-valide.
-
+basés sur la grammaire, afin de garantir que chaque entrées soit syntaxiquement
+valide. Une entrée utilisant une grammaire spécifique est représenté sous la forme d'un arbre:
 
 \begin{center}
     \includegraphics[scale=0.5]{arbreGrammar.png}
@@ -213,40 +227,57 @@ valide.
     \label{fig:exemple2}
 \end{center}
 
+On remarque la présence de règles de grammaires, on ne peut pas segmenter l'arbre
+de manière aléatoire, il est nécessaire de le faire en respectant la grammaire
+utilisé par le développeur. 
+
 \section{Développements et travaux réalisés}
 Les algorithmes restant complexes, j'ai appliqué la méthologie du test-driven development
-(TDD). Cela m'as permis de définir le comportement attendu avant même de commencer
-le code. J'ai implémenter deux algorithme de réduction avec un design pattern
-Strategy: la réduction par sous arbres et par expansion alterné. 
+(TDD). Cela m'a permis de définir le comportement attendu avant même de commencer
+le code. J'ai implémenté deux algorithmes de réduction avec un design pattern
+Strategy: la réduction par sous arbres et par expansion alternée. 
 Cette méthodologie permetras d'implémenter facilement l'ajout de futurs algorithmes. 
 
+\begin{center}
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.45]{subtreearbre.png}
+        \captionof{figure}{Stratégie de réduction par sous-arbres}
+        \label{fig:subtree}
+    \end{minipage}
+    \hfill 
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{alternatearbre.png}
+        \captionof{figure}{Stratégie par expansion alternée}
+        \label{fig:alternate}
+    \end{minipage}
+\end{center}
 
-%\begin{center}
-%    \begin{minipage}{0.48\textwidth}
-%        \centering
-%        \includegraphics[scale=0.45]{subtreearbre.png}
-%        \captionof{figure}{Stratégie de réduction par sous-arbres}
-%        \label{fig:subtree}
-%    \end{minipage}
-%    \hfill 
-%    \begin{minipage}{0.48\textwidth}
-%        \centering
-%        \includegraphics[scale=0.5]{alternatearbre.png}
-%        \captionof{figure}{Stratégie par expansion alternée}
-%        \label{fig:alternate}
-%    \end{minipage}
-%\end{center}
+\textbf{La réduction par sous arbres: } Afin de réduire en utilisant les sous arbres, 
+on choisis un noeud de notre arbre et on le remplace par un sous-arbre ayant le même noeud.
+Dans la figure~\ref{fig:subtree}, le premier noeud <expr> est remplacé par un sous arbre 
+<expr> correspondant à (2*3).
+
+\textbf{La réduction par expansion alternée: } On peut réduire d'une autre 
+manière en regardant si il existe des sous arbres d'un même symbole avec 
+moins d'enfants. Dans la figure~\ref{fig:alternate}, on trouve une alternative au 
+noeud <term> à 2 enfants par le sous arbre <term> avec un seul enfant correspondant à 3.
 
 \section{Difficultés rencontrées et solutions apportées}
-Durant mon stage, j'ai rencontrés plusieurs difficulté, spécifiquement
-sur l'implémentation du shrinking. 
-\begin{itemize}
-    \item Adaptation Smalltalk/Pharo : Les exemples d'algorithmes du Fuzzing Book sont écrits en Python. 
-    Adapthé des algorithmes en Python vers Pharo a demandé une compréhension complète de la logique 
-    mais aussi une réflexion sur les structure de données.
-    \item Solidité de l'exploration : Garantir que le shrinker explore 
-    de manière efficace les branches de réduction a nécessité a nécessité de nombreux tests. (à compléter)
-\end{itemize}
+En implémentant le shrinking, j'ai rencontrés plusieurs difficultés.  
+Les exemples d'algorithmes du Fuzzing Book sont écrits en Python, un langage
+bien plus permissif que Pharo. J'ai nottament rencontrés des problèmes lors de la 
+manipulation d'arbres, dans le cas de modification ou de récuparation 
+d'informations sur des noeuds. J'ai réglé ce problème en analysant directement
+l'implémentation des arbres dans Pharo afin de prendre connaisances
+des méthodes que j'avais à disposition. 
+
+Avec le Fuzzing Book sous la main, je me suis perdue sur ce que je 
+devait faire et dans quel ordre le faire. Afin d'y remédier, Federico m'as proposé
+de faire du TDD, en commencant par des tests simple et de graduellement complexifier 
+mes entrées. 
+
 
 % ======================================================================
 % CONCLUSION ET BILAN 
@@ -255,17 +286,17 @@ sur l'implémentation du shrinking.
 \label{ch:conclusion}
 
 \section{Adéquation de la Réalisation aux Objectifs et Perspectives}
-Ce qui a été réalisé:
+Au cours des dernières semaine, j'ai réalisé: 
 \begin{itemize}
-    \item simplification de la définition d'une campagne
-    \item ajout d'une bar de progression
-    \item ajout d'une ci limité à certains tests
-    \item ajout d'un shrinker: delta debugger et réduction de grammaire 
+    \item La simplification de la définition d'une campagne
+    \item l'ajout d'une barre de progression
+    \item création d'une CI (intégration continue) limité à certains tests
+    \item implémentation du shrinker: delta debugger et réductions de grammaire 
 \end{itemize}
 
 L'ajout de ses fonctionnalités permets une prise en main plus simple pour 
 un utilisateur: la définition est concise et a un retour visuel prouvant
-que des tests sont générés en direct. Le shrinker peut être utilisé afin de 
+que des tests sont générés en temps réel. Le shrinker peut être utilisé afin de 
 trouver des cas d'erreurs debuggable facilement, et même avec
 l'utilisation d'une grammaire spécifique. 
 
@@ -281,7 +312,7 @@ Afin d'avoir une lecture plus simples des résultats d'une campagne, l'ajout d'u
 est prévue. Ce retour permettras d'avoir une vue d'ensemble sur la campagne et d'en receuillir les informations
 facilement. 
 Et dans cette continuité, l'ajout d'un plugin pour Dr Test (une UI plugin-based permettant de gérer 
-les tests) est aussi prévue.  
+les tests unitaires) est aussi prévue.  
 
 \section{Enseignements et Apports du Stage}
 Ce stage m'a permis de développer une forte autonomie. Dès les premiers jours, 
@@ -297,7 +328,8 @@ conception logicielle.
 
 \section{Remerciements}
 Je souhaite remercier mon tuteur d'entreprise, Federico Lochbaum, pour ses 
-précieux conseils, sa patience et sa confiance. Mon tuteur universitaire, 
+précieux conseils, sa patience et sa confiance.  À Guillermo Polito, pour son accompagnement 
+et pour s'être toujours montré disponible pour me renseigner. Mon tuteur universitaire, 
 Romain Rouvoy, pour son suivi rigoureux. Enfin, j'adresse mes remerciements 
 à Imen Sayar pour son soutien continu et pour avoir appuyé ma candidature 
 pour ce stage.
